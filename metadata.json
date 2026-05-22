@@ -1,0 +1,8 @@
+{
+  "name": "Wentric Company",
+  "description": "Building the Future with Innovation & AI. An ecosystem of cutting-edge technology projects including Codeusta, IntelektAI, Vibogram, and Paynest.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -1,0 +1,121 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ---------------------------------------------------------
+    // GLOBAL HELPERS
+    // ---------------------------------------------------------
+    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
+    function isSignedIn() { return request.auth != null; }
+    function isEmailVerified() { return request.auth.token.email_verified == true; }
+    function isOwner(userId) { return isSignedIn() && request.auth.uid == userId; }
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+    
+    // Admin check: Bootstrap your email here
+    function isAdmin() { 
+      return isSignedIn() && (
+        request.auth.token.email == "tuyginovsardor4@gmail.com" || 
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    // ---------------------------------------------------------
+    // CATCH-ALL DENY
+    // ---------------------------------------------------------
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // ---------------------------------------------------------
+    // USERS COLLECTION
+    // ---------------------------------------------------------
+    match /users/{userId} {
+      function isValidUser(data) {
+        return data.keys().hasAll(['uid', 'displayName']) &&
+               data.uid is string && data.uid.size() <= 128 &&
+               data.displayName is string && data.displayName.size() <= 100 &&
+               (!('photoURL' in data) || (data.photoURL is string && data.photoURL.size() <= 500)) &&
+               (!('isAdmin' in data) || data.isAdmin is bool);
+      }
+
+      allow get: if true;
+      allow list: if isSignedIn() && isAdmin(); // Only admins can list users for security
+
+      allow create: if isOwner(userId) && isValidUser(incoming()) && 
+                       (!('isAdmin' in incoming()) || incoming().isAdmin == false);
+      
+      allow update: if (isOwner(userId) && isValidUser(incoming()) && 
+                        incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'photoURL'])) ||
+                       (isAdmin() && isValidUser(incoming()));
+    }
+
+    // ---------------------------------------------------------
+    // SYSTEM SETTINGS & VISION (Admin only write)
+    // ---------------------------------------------------------
+    match /vision/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /projects/{projectId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ---------------------------------------------------------
+    // SUPPORT CHATS
+    // ---------------------------------------------------------
+    match /support_chats/{chatId} {
+      function isValidSession(data) {
+        return data.keys().hasAll(['userId', 'userName', 'status']) &&
+               data.userId == request.auth.uid &&
+               data.status in ['open', 'closed'];
+      }
+
+      allow read: if isOwner(resource.data.userId) || isAdmin();
+      allow create: if isSignedIn() && isValidSession(incoming());
+      allow update: if isAdmin() || (isOwner(resource.data.userId) && incoming().diff(existing()).affectedKeys().hasOnly(['status', 'lastMessageAt']));
+      
+      match /messages/{messageId} {
+        allow read: if isOwner(get(/databases/$(database)/documents/support_chats/$(chatId)).data.userId) || isAdmin();
+        allow create: if (isSignedIn() && (request.auth.uid == get(/databases/$(database)/documents/support_chats/$(chatId)).data.userId || isAdmin())) &&
+                        incoming().senderId == request.auth.uid;
+      }
+    }
+
+    // ---------------------------------------------------------
+    // TEAM / RESUMES COLLECTION
+    // ---------------------------------------------------------
+    match /team/{memberId} {
+      function isValidResume(data) {
+        return data.keys().hasAll(['userId', 'name', 'role', 'bio']) &&
+               data.userId == request.auth.uid &&
+               data.name is string && data.name.size() <= 100 &&
+               data.role is string && data.role.size() <= 100 &&
+               data.bio is string && data.bio.size() <= 1000 &&
+               (!('avatar' in data) || (data.avatar is string && data.avatar.size() <= 500)) &&
+               (!('skills' in data) || (data.skills is list && data.skills.size() <= 20)) &&
+               (!('experience' in data) || (data.experience is string && data.experience.size() <= 100)) &&
+               (!('links' in data) || data.links is map) &&
+               data.createdAt == (resource == null ? request.time : existing().createdAt) &&
+               data.updatedAt == request.time;
+      }
+
+      allow read: if true; // Publicly visible for investors and everyone
+      
+      allow create: if isSignedIn() && isEmailVerified() && isValidResume(incoming());
+      
+      allow update: if (isOwner(existing().userId) && isEmailVerified() && isValidResume(incoming())) || isAdmin();
+      
+      allow delete: if isOwner(existing().userId) || isAdmin();
+    }
+    
+    // ---------------------------------------------------------
+    // ADMINS COLLECTION (INTERNAL)
+    // ---------------------------------------------------------
+    match /admins/{adminId} {
+      allow read: if isSignedIn();
+      allow write: if false; // Only manageable via Firebase Console or pre-bootstrap
+    }
+  }
+}
