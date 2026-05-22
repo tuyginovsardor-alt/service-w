@@ -92,7 +92,7 @@ export const TEAM: TeamMember[] = [
     bio: "Wentric ekotizimini boshqaruvchi istiqbolli lider. AI arxitekturasi, strategik raqamli kengayish va kengaytiriladigan ekotizimlarni qurish bo'yicha mutaxassis.",
     avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sardor",
     skills: ["AI Arxitekturasi", "Strategik Rahbarlik", "FinTech", "Mahsulot Strategiyasi"],
-    experience: "Texnologik rahbarlikda 10 yillik tajriba",
+    experience: "Asoschi — 10 yillik tajriba",
     links: { linkedin: "#", github: "#" }
   },
   {
@@ -100,8 +100,8 @@ export const TEAM: TeamMember[] = [
     role: "Texnik direktor (CTO)",
     bio: "Codeusta va Wentric AI ortidagi texnik daho. Yuqori unumdorlikka ega tizimlar, taqsimlangan arxitektura va AI miqyosliligi bo'yicha mutaxassis.",
     avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Alexey",
-    skills: ["Tizim Dizayni", "Bulutli Infrastruktura", "Full-stack Ishlab Chiqish", "Avtomatlashtirish"],
-    experience: "Katta muhandislik portfoliosi",
+    skills: ["Tizim Dizayni", "Bulutli Infratuzilma", "Full-stack", "Avtomatlashtirish"],
+    experience: "Katta Muhandis",
     links: { linkedin: "#", github: "#" }
   },
   {
@@ -109,8 +109,53 @@ export const TEAM: TeamMember[] = [
     role: "AI bo'limi rahbari",
     bio: "IntelektAI-da tadqiqotlarni boshqaradi. Neyron tarmoqlari, LLM-lar va inson markaziyligidagi AI modellarini yaratish uchun NLP bo'yicha ixtisoslashgan.",
     avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Elena",
-    skills: ["NLP", "Neyron Tarmoqlari", "Ma'lumotlar Ilmi (Data Science)", "Axloqiy AI"],
-    experience: "Kompyuter fanlari fanlari doktori (Ph.D.)",
+    skills: ["NLP", "Neyron Tarmoqlari", "Data Science", "Ethical AI"],
+    experience: "Ph.D. Tadqiqotchi",
+    links: { linkedin: "#", github: "#" }
+  },
+  {
+    name: "Alex",
+    role: "Etakchi Frontend Dasturchi",
+    bio: "7 yildan ortiq vaqt davomida React, Next.js va zamonaviy CSS bilan moslashuvchan veb-ilovalarni yaratib kelmoqda. Interfeyslar va qulaylik standartlarini boshqaradi.",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Alex",
+    skills: ["React", "TypeScript", "Next.js", "TailwindCSS", "Accessibility"],
+    experience: "7+ yillik tajriba",
+    links: { linkedin: "#", github: "#" }
+  },
+  {
+    name: "Mia",
+    role: "Full-stack Dasturchi",
+    bio: "TypeScript, Node.js va bulutli API-lardan foydalangan holda zamonaviy interfeyslarni ishonchli backend tizimlariga ulash bo'yicha ekspert. Tizimlarni tezkor saqlashni nazorat qiladi.",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Mia",
+    skills: ["Node.js", "Express", "TypeScript", "APIs", "PostgreSQL"],
+    experience: "Full-Stack Ekspert",
+    links: { linkedin: "#", github: "#" }
+  },
+  {
+    name: "Owen",
+    role: "Backend Dasturchi",
+    bio: "Xavfsiz serverlar, ma'lumotlarni modellashtirish va integratsiya jarayonlariga ixtisoslashgan. Ishlab chiqarishga tayyor tizimlar uchun API va operatsion vositalar yaratadi.",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Owen",
+    skills: ["Docker", "Kubernetes", "Redis", "Security", "DevOps"],
+    experience: "Infratuzilma Muhandisi",
+    links: { linkedin: "#", github: "#" }
+  },
+  {
+    name: "Sophia",
+    role: "Mobil va Frontend Muhandisi",
+    bio: "React Native, zamonaviy moslashuvchan tartiblar va mukammal kod bilan veb va mobil ilovalar uchun uzluksiz raqamli tajribalar yaratadi.",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sophia",
+    skills: ["React Native", "iOS / Android", "UI Interaction", "TailwindCSS"],
+    experience: "Ko'p tarmoqli ishlab chiquvchi",
+    links: { linkedin: "#", github: "#" }
+  },
+  {
+    name: "Riley",
+    role: "Mahsulot Dizayneri",
+    bio: "Jamoalarga ishonch bilan mahsulotlarini ishga tushirishga yordam beradigan minimal vizual tizimlar va mukammal foydalanuvchi yo'llarini yaratadi. Strategik dizaynni brend fikrlash bilan uyg'unlashtiradi.",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Riley",
+    skills: ["Figma", "UI/UX Systems", "Prototyping", "Visual Identity"],
+    experience: "Brand & Product Designer",
     links: { linkedin: "#", github: "#" }
   }
 ];

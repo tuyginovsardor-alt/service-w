@@ -15,7 +15,10 @@ import {
   ArrowRight, 
   Bot, 
   Send,
-  ExternalLink
+  ExternalLink,
+  Cpu,
+  Palette,
+  CheckSquare
 } from "lucide-react";
 import { PROJECTS, VALUES, LOGO_URL, TeamMember } from "./data.ts";
 import { cn } from "./lib/utils.ts";
@@ -172,74 +175,157 @@ export default function App() {
           <div className="hidden lg:flex items-center gap-10 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
             <a href="#ecosystem" className="hover:text-sky-400 transition-colors">Ekotizim</a>
             <a href="#about" className="hover:text-sky-400 transition-colors">Vizyon</a>
+            <a href="#strengths" className="hover:text-sky-400 transition-colors">Imkoniyatlar</a>
             <a href="#team" className="hover:text-sky-400 transition-colors">Jamoa</a>
             <a href="#strategy" className="px-4 py-2 bg-white/5 rounded-full hover:text-white transition-all text-sky-500 border border-sky-500/20">Global Strategiya</a>
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="hidden md:block">
-              {user ? (
-                <ProfileMenu 
-                  user={user} 
-                  isAdmin={isAdmin} 
-                  onShowResume={() => setShowResumeForm(true)} 
-                  onShowAdmin={() => setShowAdminPanel(true)} 
-                />
-              ) : (
-                <button 
-                  onClick={() => loginWithGoogle()}
-                  className="flex items-center gap-2 px-6 py-2.5 bg-sky-500 text-black text-[10px] font-black rounded-full hover:bg-sky-400 transition-all uppercase tracking-[0.2em] shadow-lg shadow-sky-500/20"
-                >
-                  <LogIn className="w-4 h-4" /> Kirish
-                </button>
-              )}
-            </div>
-
             <button 
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="lg:hidden p-3 bg-white/5 rounded-2xl border border-white/10 text-white"
+              className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl border border-white/10 text-white transition-all flex items-center gap-2 group"
             >
-              {isMenuOpen ? <XIcon className="w-6 h-6" /> : <MenuIcon className="w-6 h-6" />}
+              <span className="hidden md:inline text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 group-hover:text-sky-400">COMMAND CONTROL</span>
+              <div className="relative">
+                {isMenuOpen ? (
+                  <XIcon className="w-5 h-5 text-sky-400 animate-pulse" />
+                ) : (
+                  <>
+                    <MenuIcon className="w-5 h-5 group-hover:text-sky-400 transition-colors" />
+                    <span className="absolute -top-1 -right-1 w-2 h-2 bg-sky-500 rounded-full animate-ping" />
+                  </>
+                )}
+              </div>
             </button>
           </div>
         </div>
       </nav>
 
-      {/* Mobile Menu */}
+      {/* Side Command Center Drawer */}
       <AnimatePresence>
         {isMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, x: '100%' }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: '100%' }}
-            className="fixed inset-0 z-[100] bg-[#050505] lg:hidden flex flex-col"
-          >
-            <div className="p-8 flex items-center justify-between border-b border-white/5">
-              <span className="text-xl font-black italic text-white">WENTRIC</span>
-              <button onClick={() => setIsMenuOpen(false)} className="p-3 bg-white/5 rounded-2xl"><XIcon className="w-6 h-6" /></button>
-            </div>
-            <div className="flex-1 p-8 flex flex-col gap-8 text-2xl font-black italic uppercase tracking-tighter">
-              <a href="#ecosystem" onClick={() => setIsMenuOpen(false)}>Ekotizim</a>
-              <a href="#about" onClick={() => setIsMenuOpen(false)}>Vizyon</a>
-              <a href="#team" onClick={() => setIsMenuOpen(false)}>Jamoa</a>
-              <a href="#strategy" onClick={() => setIsMenuOpen(false)} className="text-sky-500">Strategiya</a>
-            </div>
-            <div className="p-8 border-t border-white/5">
-               {user ? (
-                 <div className="flex items-center justify-between">
-                   <div className="flex items-center gap-4">
-                     <img src={user.photoURL || ""} className="w-12 h-12 rounded-full" alt="" />
-                     <div>
-                       <div className="text-sm font-bold text-white">{user.displayName}</div>
-                       <button onClick={logout} className="text-xs text-red-400 uppercase tracking-widest font-bold">Chiqish</button>
-                     </div>
-                   </div>
-                 </div>
-               ) : (
-                 <button onClick={() => loginWithGoogle()} className="w-full py-5 bg-sky-500 text-black font-black uppercase rounded-2xl tracking-widest text-sm">Google bilan Kirish</button>
-               )}
-            </div>
-          </motion.div>
+          <>
+            {/* Backdrop blur */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMenuOpen(false)}
+              className="fixed inset-0 z-[90] bg-black/80 backdrop-blur-md"
+            />
+            
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: "spring", damping: 35, stiffness: 350 }}
+              className="fixed right-0 top-0 bottom-0 z-[100] w-full max-w-md bg-[#07070a]/95 border-l border-white/10 backdrop-blur-3xl shadow-2xl flex flex-col p-8 overflow-y-auto no-scrollbar"
+            >
+              <div className="flex items-center justify-between border-b border-white/5 pb-6 mb-8 mt-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg overflow-hidden border border-white/10 flex items-center justify-center bg-black">
+                    <img src={LOGO_URL} alt="W" className="w-full h-full object-cover" />
+                  </div>
+                  <div>
+                    <span className="text-sm font-black italic text-white uppercase tracking-[0.2em] leading-none block">Wentric</span>
+                    <span className="text-[8px] font-black tracking-[0.3em] text-sky-500 uppercase mt-1 block">Command Node</span>
+                  </div>
+                </div>
+                <button onClick={() => setIsMenuOpen(false)} className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl border border-white/10 text-white transition-all">
+                  <XIcon className="w-5 h-5 text-sky-400" />
+                </button>
+              </div>
+
+              {/* Tizimga kirish / Access controls in Uzbek */}
+              <div className="mb-10 rounded-3xl bg-gradient-to-br from-white/5 to-transparent border border-white/5 p-6 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-sky-500/5 blur-3xl rounded-full" />
+                <h3 className="text-[9px] font-black uppercase tracking-[0.3em] text-zinc-500 mb-4 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 bg-sky-500 rounded-full animate-pulse" />
+                  Tizim Control Center
+                </h3>
+
+                {user ? (
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-2xl border border-white/10 overflow-hidden shadow-2xl">
+                        <img src={user.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`} alt="" className="w-full h-full object-cover" />
+                      </div>
+                      <div>
+                        <div className="text-sm font-black text-white italic tracking-tight">{user.displayName}</div>
+                        <div className="text-[8px] text-zinc-500 uppercase tracking-[0.2em] font-mono mt-1">{user.email}</div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-3 pt-4 border-t border-white/5">
+                      <button 
+                        onClick={() => { setShowResumeForm(true); setIsMenuOpen(false); }}
+                        className="w-full flex items-center gap-3 px-5 py-3.5 bg-white/5 hover:bg-white/10 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all border border-white/10"
+                      >
+                        <Plus className="w-4 h-4 text-sky-400" />
+                        Mening Profilim
+                      </button>
+
+                      {isAdmin && (
+                        <button 
+                          onClick={() => { setShowAdminPanel(true); setIsMenuOpen(false); }}
+                          className="w-full flex items-center gap-3 px-5 py-3.5 bg-sky-500 text-black rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all hover:bg-sky-400 shadow-2xl shadow-sky-500/20"
+                        >
+                          <Edit2 className="w-4 h-4" />
+                          Admin Command Panel
+                        </button>
+                      )}
+                    </div>
+
+                    <button 
+                      onClick={() => { logout(); setIsMenuOpen(false); }}
+                      className="w-full flex items-center justify-center gap-2 text-red-400 hover:text-red-300 text-[9px] font-black uppercase tracking-[0.2em] mt-4 pt-2 border-t border-white/5"
+                    >
+                      <LogOut className="w-4 h-4" /> Tizimdan Chiqish
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <p className="text-[11px] text-zinc-400 italic leading-relaxed">
+                      Wentric boshqaruv tuguniga ulanish orqali portfoliongizni boshqaring, jamoaga qo'shiling va tizim imkoniyatlaridan foydalaning.
+                    </p>
+                    <button 
+                      onClick={() => { loginWithGoogle(); setIsMenuOpen(false); }}
+                      className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-sky-500 text-black text-[10px] font-black rounded-2xl hover:bg-sky-400 transition-all uppercase tracking-[0.2em] shadow-xl shadow-sky-500/20"
+                    >
+                      <LogIn className="w-4 h-4" /> Google bilan Kirish
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Navigation links inside Command Drawer */}
+              <div className="space-y-2 mb-10">
+                <div className="text-[8px] font-black uppercase tracking-[0.3em] text-zinc-600 pl-2 mb-4">Navigatsiya</div>
+                {[
+                  { href: "#ecosystem", label: "Wentric Ekotizimi" },
+                  { href: "#about", label: "Vizyon va Missiya" },
+                  { href: "#strengths", label: "Bizning Imkoniyatlarimiz" },
+                  { href: "#team", label: "Bizning Jamoamiz" }
+                ].map(link => (
+                  <a 
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setIsMenuOpen(false)}
+                    className="block px-6 py-4 bg-white/[0.02] hover:bg-white/5 border border-white/5 rounded-2xl text-xs font-bold uppercase tracking-widest text-zinc-300 hover:text-white transition-all italic leading-none"
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </div>
+
+              {/* Live telemetry footer inside Command Drawer */}
+              <div className="mt-auto border-t border-white/5 pt-6 text-[8px] text-zinc-600 font-mono space-y-2 uppercase tracking-widest">
+                <div className="flex justify-between"><span>Node status:</span><span className="text-emerald-500 font-bold">Operational</span></div>
+                <div className="flex justify-between"><span>Region:</span><span>Central Asia (UZB)</span></div>
+                <div className="flex justify-between"><span>Secure Key:</span><span>AE-WNT-88X</span></div>
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
 
@@ -327,26 +413,139 @@ export default function App() {
         </div>
       </section>
 
-      {/* Values Section */}
-      <section id="about" className="py-20 px-6 border-y border-white/5 bg-white/[0.01]">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-4 gap-12">
-            {(vision?.values || VALUES).map((val, i) => (
-              <motion.div
-                key={val.title}
+      {/* Overview & Core Strengths Section */}
+      <section id="about" className="py-24 px-8 border-y border-white/5 bg-zinc-950/10 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-sky-500/[0.01] to-transparent pointer-events-none" />
+        <div className="max-w-7xl mx-auto space-y-24">
+          
+          {/* Who We Are & What We Deliver Cards */}
+          <div className="grid md:grid-cols-2 gap-8">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="p-10 rounded-[2.5rem] bg-gradient-to-br from-white/[0.03] to-transparent border border-white/10 backdrop-blur-md relative overflow-hidden group"
+            >
+              <div className="absolute top-0 right-0 w-32 h-32 bg-sky-500/5 blur-3xl rounded-full" />
+              <h3 className="text-xs font-black text-sky-500 uppercase tracking-[0.3em] mb-4">Biz kimmiz</h3>
+              <p className="text-xl text-white font-medium italic leading-relaxed mb-6">
+                Wentric - bu veb-ilova loyihalari, mobil-birinchi mahsulotlar va raqamli dizayn bo'yicha ixtisoslashgan tajribali IT xizmat ko'rsatish jamoasi.
+              </p>
+              <p className="text-sm text-zinc-500 leading-relaxed font-light">
+                Bizning muhandislik va vizual kollektivimiz muttasil ravishda aniqlik, soddalik va natijaga yo'naltirilgan ilg'or tizimlarni ishlab chiqish atrofida faoliyat yuritadi. Biz har bir loyihaning raqamli infratuzilmasini eng yuqori darajaga olib chiqamiz.
+              </p>
+            </motion.div>
+
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="p-10 rounded-[2.5rem] bg-gradient-to-br from-white/[0.03] to-transparent border border-white/10 backdrop-blur-md relative overflow-hidden group"
+            >
+              <div className="absolute top-0 right-0 w-32 h-32 bg-sky-500/5 blur-3xl rounded-full" />
+              <h3 className="text-xs font-black text-sky-500 uppercase tracking-[0.3em] mb-4">Nima taqdim etamiz</h3>
+              <p className="text-xl text-white font-medium italic leading-relaxed mb-6">
+                Biz xavfsiz ilovalar, benuqson va chiroyli interfeyslar hamda kengaytiriladigan raqamli infratuzilmalarni yaratamiz.
+              </p>
+              <p className="text-sm text-zinc-500 leading-relaxed font-light">
+                Har bir loyiha qulaylik, yuqori unumdorlik, barqaror xavfsizlik va kelajakka mos texnik strategiyaga e'tibor qaratgan holda mukammal darajada ishlab chiqiladi. Biz raqamli olamdagi eng ishonchli va doimiy texnologik hamkoringizmiz.
+              </p>
+            </motion.div>
+          </div>
+
+          {/* Core Strengths Section */}
+          <div id="strengths" className="space-y-12 pt-12 border-t border-white/5">
+            <div className="text-center space-y-4">
+              <span className="text-[10px] font-black text-sky-500 uppercase tracking-[0.4em] block">Sifat kafolati</span>
+              <h2 className="text-3xl md:text-5xl font-black text-white italic uppercase tracking-tight">KUCHLI TOMONLARIMIZ</h2>
+              <p className="text-zinc-500 max-w-2xl mx-auto text-sm leading-relaxed italic">
+                Ekotizimimiz va jamoamiz orqali amalga oshiriladigan professional xizmatlar va ularning mukammal tuzilmalari.
+              </p>
+            </div>
+
+            <div className="grid lg:grid-cols-3 gap-8">
+              {/* Engineering Strength */}
+              <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
                 viewport={{ once: true }}
+                className="p-10 rounded-[2.5rem] bg-zinc-950/40 border border-white/5 hover:border-sky-500/20 transition-all flex flex-col gap-8 group relative overflow-hidden"
               >
-                <div className="w-10 h-10 rounded-lg bg-sky-500/10 flex items-center justify-center text-sky-400 mb-4">
-                  {React.createElement(getIcon(val.icon || 'Zap'), { className: 'w-5 h-5' })}
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-sky-500/10 flex items-center justify-center text-sky-400">
+                    <Cpu className="w-6 h-6 animate-pulse" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-black text-white uppercase tracking-wider">Muhandislik</h3>
+                    <span className="text-[10px] text-zinc-500 uppercase font-black tracking-widest block mt-0.5">Engineering</span>
+                  </div>
                 </div>
-                <h3 className="text-lg font-bold mb-2 text-white">{val.title}</h3>
-                <p className="text-sm text-zinc-500 leading-relaxed italic">{val.desc}</p>
+                <p className="text-zinc-400 text-xs leading-relaxed italic">
+                  Zamonaviy arxitektura, toza kod va kuchli DevOps xizmatlari. Biz tizim unumdorligi va miqyosini kafolatlaymiz.
+                </p>
+                <div className="space-y-4 pt-4 border-t border-white/5 mt-auto">
+                  <div className="flex justify-between items-center text-xs font-mono"><span className="text-zinc-500">Frontend:</span><span className="text-white font-bold">React, Vue, TS, Tailwind</span></div>
+                  <div className="flex justify-between items-center text-xs font-mono"><span className="text-zinc-500">Backend:</span><span className="text-white font-bold">Node.js, Python, SQL, C#</span></div>
+                  <div className="flex justify-between items-center text-xs font-mono"><span className="text-zinc-500">Infratuzilma:</span><span className="text-white font-bold">AWS, Docker, CI/CD</span></div>
+                </div>
               </motion.div>
-            ))}
+
+              {/* Design Strength */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="p-10 rounded-[2.5rem] bg-zinc-950/40 border border-white/5 hover:border-sky-500/20 transition-all flex flex-col gap-8 group relative overflow-hidden"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-sky-500/10 flex items-center justify-center text-sky-400">
+                    <Palette className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-black text-white uppercase tracking-wider">Dizayn</h3>
+                    <span className="text-[10px] text-zinc-500 uppercase font-black tracking-widest block mt-0.5">Design</span>
+                  </div>
+                </div>
+                <p className="text-zinc-400 text-xs leading-relaxed italic">
+                  Kuchli brend g'oyasiga ega minimal va intuitiv interfeyslar. Biz o'ta mukammal foydalanuvchilar tajribasini (UX) loyihalashtiramiz.
+                </p>
+                <div className="space-y-4 pt-4 border-t border-white/5 mt-auto">
+                  <div className="flex justify-between items-center text-xs font-mono"><span className="text-zinc-500">UI Dizayn:</span><span className="text-white font-bold">Figma, adaptiv tizimlar</span></div>
+                  <div className="flex justify-between items-center text-xs font-mono"><span className="text-zinc-500">UX Strategiya:</span><span className="text-white font-bold">User Journeys, prototiplar</span></div>
+                  <div className="flex justify-between items-center text-xs font-mono"><span className="text-zinc-500">Vizuallik:</span><span className="text-white font-bold">Brending, harakatlar</span></div>
+                </div>
+              </motion.div>
+
+              {/* Delivery Strength */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="p-10 rounded-[2.5rem] bg-zinc-950/40 border border-white/5 hover:border-sky-500/20 transition-all flex flex-col gap-8 group relative overflow-hidden"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-sky-500/10 flex items-center justify-center text-sky-400">
+                    <CheckSquare className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-black text-white uppercase tracking-wider">Yetkazib berish</h3>
+                    <span className="text-[10px] text-zinc-500 uppercase font-black tracking-widest block mt-0.5">Delivery</span>
+                  </div>
+                </div>
+                <p className="text-zinc-400 text-xs leading-relaxed italic">
+                  Shaffof muloqot va tizimli jamoaviy yondashuv. Biz loyihalarni o'z muddatida va oliy sifat standartlarida topshiramiz.
+                </p>
+                <div className="space-y-4 pt-4 border-t border-white/5 mt-auto">
+                  <div className="flex justify-between items-center text-xs font-mono"><span className="text-zinc-500">Loyiha ritmi:</span><span className="text-white font-bold">Reja, sharh, tezkor iteratsiya</span></div>
+                  <div className="flex justify-between items-center text-xs font-mono"><span className="text-zinc-500">Sifat:</span><span className="text-white font-bold">Sinov, xavfsizlik, tezlik</span></div>
+                  <div className="flex justify-between items-center text-xs font-mono"><span className="text-zinc-500">Yordam:</span><span className="text-white font-bold">Hujjatlar, kelajak kafolati</span></div>
+                </div>
+              </motion.div>
+            </div>
           </div>
+
         </div>
       </section>
 
