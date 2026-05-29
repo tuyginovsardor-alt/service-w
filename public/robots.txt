@@ -1,0 +1,6 @@
+# Wentric Robots Policy
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://wentric.uz/sitemap.xml
